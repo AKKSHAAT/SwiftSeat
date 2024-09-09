@@ -11,7 +11,7 @@ const Show = () => {
       <section>
         <div className="relative h-[28vh] overflow-hidden">
           <img
-            className="object-cover h-full w-full"
+            className="object-cover h-full w-full rounded-xl"
             src="https://picsum.photos/1400"
             alt="Gamers Connect"
           />

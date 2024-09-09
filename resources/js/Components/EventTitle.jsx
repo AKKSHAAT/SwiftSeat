@@ -1,7 +1,7 @@
 import React from "react";
 import Seats from "./Seats";
 
-const EventTitle = () => {
+const EventTitle = ({size="big"}) => {
   return (
     <>
       <div className="flex justify-between items-center mb-2 border-b-2 ">
@@ -12,7 +12,7 @@ const EventTitle = () => {
       <div className="flex justify-between">
         <div className=" font-extrabold text-white flex flex-col gap-1 text-left">
           <p className="text-md text-white/50">At</p>
-          <span className=" capitalize text-3xl">DDN</span>
+          <span className=" capitalize text-3xl text-redw">DDN</span>
           <span className=" text-md text-white/50">On</span>
 
           <p className=" capitalize text-white text-3xl">MONDAY | 9/AUG/2024</p>

@@ -93,7 +93,7 @@ const Seats = () => {
             <span
               key={seat.id}
               className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
-                seat.selected ? "bg-white" : "bg-gray-500"
+                seat.selected ? "bg-red border-none" : ""
               }`}
               onClick={() => handleVIPSeatClick(seat)}
             ></span>
@@ -109,7 +109,7 @@ const Seats = () => {
             <span
               key={seat.id}
               className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
-                seat.selected ? "bg-white" : "bg-gray-500"
+                seat.selected ? "bg-red border-none" : ""
               }`}
               onClick={() => handleRegularSeatClick(seat)}
             ></span>
