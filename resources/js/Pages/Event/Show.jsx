@@ -3,7 +3,10 @@ import React from "react";
 import EventTitle from "@/Components/EventTitle";
 import Seats from "@/Components/Seats";
 
-const Show = () => {
+
+const Show = ({event}) => {
+
+  console.log(event);
   return (
     <>
       <Nav />
@@ -18,7 +21,7 @@ const Show = () => {
           <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-black via-black to-transparent"></div>
         </div>
 
-        <EventTitle />
+        <EventTitle event={event}/>
         <div className="mt-2">
           <Seats />
         </div>

@@ -13,9 +13,19 @@ Route::get('/', function () {
     ]);
 })->name('event.index');
 
-Route::get('events', function() {
-    return inertia('Show');
-})->name('events.show'); // Shows a single event
+
+
+
+// web.php
+Route::get('/events/{event}', function (Event $event) {
+    
+    return Inertia::render('Event/Show', [
+        'event' => $event
+    ]);
+})->name('events.show');
+
+
+
 
 
 Route::get('tickets', function() {

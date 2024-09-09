@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 
+
 const Card = ({ size = 'big', event={}}) => {
-  console.log('Event:', event);
-  
   var classes = 'relative rounded-xl overflow-hidden flex-shrink-0 hover:brightness-[80%] translate duration-300 hover:scale-105';
 
   if (size === 'big') {
@@ -12,8 +11,12 @@ const Card = ({ size = 'big', event={}}) => {
     classes += ' w-full max-w-[18rem] h-[16rem]';
   }
 
+
   return (
-    <Link href={route('events.show')} className={classes}>
+    <Link href={`/events/${event.id}`} className={classes}>
+
+
+
       <img
         className="object-cover h-full w-full"
         src={event?.photo || "https://picsum.photos/600"}
