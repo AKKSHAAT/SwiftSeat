@@ -3,7 +3,7 @@ import AppLink from "@/Components/AppLink";
 import Nav from "@/Components/Nav";
 import Card from "@/Components/Card";
 
-export default function Welcome() {
+export default function Index({events}) {
   return (
     <>
       <Nav />
@@ -20,11 +20,14 @@ export default function Welcome() {
       <section className="pt-6 px-4">
         <h2 className="font-bold text-3xl">Next week</h2>
         <div className="gap-y-8 grid lg:grid-cols-3 gap- mt-8">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+
+        {events && events.map((event) => (
+            <Card 
+              key={event.id}
+              event={event}
+            />
+          ))}
+
         </div>
       </section>
 

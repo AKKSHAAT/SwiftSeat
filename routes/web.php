@@ -1,14 +1,17 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\Event;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-
-    return Inertia::render('Welcome');
-});
+    $events = Event::limit(10)->get();
+    return Inertia::render('Event/Index', [
+        'events' => $events
+    ]);
+})->name('event.index');
 
 Route::get('events', function() {
     return inertia('Show');
