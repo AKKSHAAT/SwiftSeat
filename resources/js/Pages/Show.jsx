@@ -1,6 +1,7 @@
 import Nav from "@/Components/Nav";
 import React from "react";
 import EventTitle from "@/Components/EventTitle";
+import Seats from "@/Components/Seats";
 
 const Show = () => {
   return (
@@ -8,7 +9,7 @@ const Show = () => {
       <Nav />
 
       <section>
-        <div className="relative h-[40vh] overflow-hidden">
+        <div className="relative h-[28vh] overflow-hidden">
           <img
             className="object-cover h-full w-full"
             src="https://picsum.photos/1400"
@@ -18,6 +19,9 @@ const Show = () => {
         </div>
 
         <EventTitle />
+        <div className="mt-2">
+          <Seats />
+        </div>
       </section>
     </>
   );

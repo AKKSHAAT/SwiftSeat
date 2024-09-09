@@ -11,7 +11,7 @@ const Card = ({size='big'}) => {
   }
 
   return (
-    <Link href="/show" className={classes}>
+    <Link href={route('events.show')} className={classes}>
     <img
       className="object-cover h-full w-full"
       src="https://picsum.photos/600"
@@ -23,7 +23,7 @@ const Card = ({size='big'}) => {
         <p className="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       </div>
       <div className="mt-auto font-extrabold text-white">
-        <p>$20</p>
+        <p>from $20</p>
       </div>
     </div>
   </Link>

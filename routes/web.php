@@ -14,9 +14,15 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('show', function() {
+Route::get('events', function() {
     return inertia('Show');
-})->name('event.show');
+})->name('events.show'); // Shows a single event
+
+
+Route::get('tickets', function() {
+    return inertia('Ticket/Index');
+})->name('tickets.index');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

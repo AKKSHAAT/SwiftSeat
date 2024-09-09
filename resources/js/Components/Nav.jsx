@@ -11,7 +11,7 @@ const Nav = ({auth}) => {
   
         <div >
           <AppLink>Event </AppLink>
-          <AppLink>My Tickets </AppLink>
+          <AppLink href={route('tickets.index')}>My Tickets </AppLink>
         </div>
 
         <div>
