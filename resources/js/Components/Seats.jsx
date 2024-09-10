@@ -13,6 +13,7 @@ const Seats = ({ VIPSeats, regularSeats }) => {
   const [VIPSeatsArr, setVIPSeatsArr] = useState(VIPSeats);
   const [regularSeatsArr, setRegularSeatsArr] = useState(regularSeats);
 
+  const [err, setErr] = useState(null);
   // -----------------------------------------------------------------------------------------
   const [selectedSeats, setSelectedSeats] = useState([]); 
 
@@ -44,14 +45,26 @@ const Seats = ({ VIPSeats, regularSeats }) => {
   const handlePayment = ()=>{
     console.log(selectedSeats);
 
-    Inertia.post(route('seats.checkAvailability'), { selectedSeats }, {
-      onSuccess: (response) => {
-        console.log('Success:', response);
-      },
-      onError: (errors) => {
-        console.log('Errors:', errors);
-      }
+    // Inertia.post(route('seats.checkAvailability'), { selectedSeats }, {
+    //   preserveScroll: true, 
+    //   onSuccess: (response) => {
+    //     console.log('Success:', response);
+    //   },
+    //   onError: (errors) => {
+    //     console.log('Errors:', errors);
+    //   }
+    // });
+    
+
+    axios.post(route('seats.checkAvailability'), { selectedSeats })
+    .then(response => {
+      console.log('Success:', response.data);
+      // Handle success here
+    })
+    .catch(error => {
+      setErr(error.response.data.error);
     });
+
     // take selected and total
     // take selectedSeats to backend to make sure they are still available
 
@@ -67,7 +80,7 @@ const Seats = ({ VIPSeats, regularSeats }) => {
 
   return (
     <div className="flex flex-col items-center">
-      {/* VIP Section */}
+      {err ? <p className="text-red">{err}</p> : <></> }
       {VIPSeats ? (
         <div className="mb-4 max-w-[375px]">
           <p className="font-bold mb-2">VIP | ${VIPSeats[0].price}</p>
