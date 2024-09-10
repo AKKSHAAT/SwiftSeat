@@ -1,7 +1,10 @@
 import React from "react";
 import EventTitle from "./EventTitle";
 
-const Ticket = () => {
+const Ticket = ({event}) => {
+
+  console.log("event::", event);
+
   return (
     <>
       <div>
@@ -26,7 +29,7 @@ const Ticket = () => {
                   <div className="border-dashed border-b-2 my-5"></div>
                   <div className="flex items-center">
                     <div className="flex flex-col ">
-                      <EventTitle />
+                      <EventTitle event={event} size="small"/>
                     </div>
                   </div>
                   <div className=" border-dashed border-b-2 my-5 pt-5">

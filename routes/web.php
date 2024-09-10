@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeatController;
 use App\Models\Event;
+use Faker\Provider\ar_EG\Payment;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use PSpell\Config;
+use Razorpay\Api\Api;
 
 Route::get('/', function () {
     $events = Event::limit(10)->get();
@@ -30,19 +35,29 @@ Route::get('/events/{event}', function (Event $event) {
 
 
 
-Route::post('seats/check-availability', [SeatController::class, 'checkAvailability'])->name('seats.checkAvailability');
 
 
 Route::get('tickets', function() {
-    return inertia('Ticket/Index');
+    $event = Event::find(1);
+
+    
+    return inertia('Ticket/Index', [
+        'event' => $event,
+    ]);
 })->name('tickets.index');
 
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-
-    
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::post('seats/check-availability', [SeatController::class, 'checkAvailability'])->name('seats.checkAvailability');
+
+Route::get('/razorpay', [PaymentController::class, 'processPayment'])->name('payment.razorpay');
+
+Route::post('payment-verify', [PaymentController::class, 'verify'])->name('payment.verify');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

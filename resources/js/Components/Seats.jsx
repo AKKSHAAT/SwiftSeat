@@ -43,30 +43,17 @@ const Seats = ({ VIPSeats, regularSeats }) => {
 
 
   const handlePayment = ()=>{
-    console.log(selectedSeats);
-
-    // Inertia.post(route('seats.checkAvailability'), { selectedSeats }, {
-    //   preserveScroll: true, 
-    //   onSuccess: (response) => {
-    //     console.log('Success:', response);
-    //   },
-    //   onError: (errors) => {
-    //     console.log('Errors:', errors);
-    //   }
-    // });
-    
-
     axios.post(route('seats.checkAvailability'), { selectedSeats })
     .then(response => {
       console.log('Success:', response.data);
-      // Handle success here
+      // handle payment
     })
     .catch(error => {
       setErr(error.response.data.error);
     });
 
     // take selected and total
-    // take selectedSeats to backend to make sure they are still available
+    // take selectedSeats to backend to make sure they are still available✅
 
     // If the payment is successful:
               //Send a confirmation to the backend, marking the seats as is_available = false.

@@ -2,11 +2,11 @@ import Nav from '@/Components/Nav'
 import Ticket from '@/Components/Ticket'
 import React from 'react'
 
-const Index = () => {
+const Index = ({event}) => {
   return (
     <>
     <Nav />
-        <Ticket />
+        <Ticket event={event}/>
         <Ticket />
     </>
   )

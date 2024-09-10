@@ -1,5 +1,4 @@
 import React from "react";
-import Seats from "./Seats";
 import { format, parse } from 'date-fns';
 
 const EventTitle = ({size="big", event={} }) => {
@@ -12,9 +11,9 @@ const EventTitle = ({size="big", event={} }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-2 border-b-2 ">
+      <div className="flex gap-6  justify-between items-center mb-2 border-b-2 ">
         <h3 className="font-bold text-6xl py-1 text-white">{event.name}</h3>
-        <p className="text-3xl font-bold">$20 /Ticket</p>
+        <p className="text-3xl font-bold">$20 / Ticket</p>
       </div>
 
       <div className="flex justify-between">
@@ -23,7 +22,7 @@ const EventTitle = ({size="big", event={} }) => {
           <span className=" capitalize text-3xl text-redw">{event.location}</span>
           <span className=" text-md text-white/50">On</span>
 
-          <p className=" capitalize text-white text-3xl">{event.day} | {formatDate(event.date)}</p>
+          <p className=" capitalize text-white text-3xl">{event.day} | {}</p>
         </div>
 
       </div>
