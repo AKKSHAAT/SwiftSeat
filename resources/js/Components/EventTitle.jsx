@@ -25,7 +25,7 @@ const EventTitle = ({size="big", event={} }) => {
 
           <p className=" capitalize text-white text-3xl">{event.day} | {formatDate(event.date)}</p>
         </div>
-        {/* <Seats /> */}
+
       </div>
     </>
   );

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Event::class);
             $table->string('seat_number');
+            $table->string('type');
+            $table->integer('price');
             $table->boolean('is_available')->default(true);
             $table->timestamps();
         });

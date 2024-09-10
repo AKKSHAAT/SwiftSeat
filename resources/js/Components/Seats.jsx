@@ -1,115 +1,75 @@
 import { Button } from "@headlessui/react";
-import React, { useReducer } from "react";
+import React, { useState } from "react";
 
-// Initial seat data for VIP and Regular seats
-const initialSeatsVIP = [
-  { id: 1, type: "VIP", selected: false, price: 100 },
-  { id: 2, type: "VIP", selected: false, price: 100 },
-  { id: 3, type: "VIP", selected: false, price: 100 },
-  { id: 4, type: "VIP", selected: false, price: 100 },
-];
-
-const initialSeatsRegular = [
-  { id: 1, type: "Regular", selected: false, price: 50 },
-  { id: 2, type: "Regular", selected: false, price: 50 },
-  { id: 3, type: "Regular", selected: false, price: 50 },
-  { id: 4, type: "Regular", selected: false, price: 50 },
-];
-
-// Reducer function to handle seat selection and cart total
-const seatReducer = (state, action) => {
-  switch (action.type) {
-    case "TOGGLE_VIP_SEAT":
-      return {
-        ...state,
-        VIPSeats: state.VIPSeats.map((seat) =>
-          seat.id === action.payload.id
-            ? { ...seat, selected: !seat.selected }
-            : seat
-        ),
-        cartTotal: calculateTotal([
-          ...state.VIPSeats.map((seat) =>
-            seat.id === action.payload.id
-              ? { ...seat, selected: !seat.selected }
-              : seat
-          ),
-          ...state.RegularSeats,
-        ]),
-      };
-    case "TOGGLE_REGULAR_SEAT":
-      return {
-        ...state,
-        RegularSeats: state.RegularSeats.map((seat) =>
-          seat.id === action.payload.id
-            ? { ...seat, selected: !seat.selected }
-            : seat
-        ),
-        cartTotal: calculateTotal([
-          ...state.VIPSeats,
-          ...state.RegularSeats.map((seat) =>
-            seat.id === action.payload.id
-              ? { ...seat, selected: !seat.selected }
-              : seat
-          ),
-        ]),
-      };
-    default:
-      return state;
-  }
+const calculateTotal = (selectedSeats) => {
+  return selectedSeats.reduce((total, seat) => total + seat.price, 0);
 };
 
-// Helper function to calculate the cart total
-const calculateTotal = (seats) => {
-  return seats.reduce((total, seat) => {
-    return seat.selected ? total + seat.price : total;
-  }, 0);
-};
+const Seats = ({ VIPSeats, regularSeats }) => {
+  const [VIPSeatsArr, setVIPSeatsArr] = useState(VIPSeats);
+  const [regularSeatsArr, setRegularSeatsArr] = useState(regularSeats);
+  const [selectedSeats, setSelectedSeats] = useState([]); // Tracks seats selected by the user
 
-const Seats = () => {
-  // UseReducer to manage seat selection and cart total
-  const [state, dispatch] = useReducer(seatReducer, {
-    VIPSeats: initialSeatsVIP,
-    RegularSeats: initialSeatsRegular,
-    cartTotal: 0,
-  });
-
+  console.log(VIPSeats);
   // Handle VIP seat selection
-  const handleVIPSeatClick = (seat) => {
-    dispatch({ type: "TOGGLE_VIP_SEAT", payload: seat });
+  const handleVIPSeatClick = (currentSeat) => {
+    // If seat is already unavailable, do nothing
+    if (!currentSeat.is_available) return;
+
+    // Toggle seat selection
+    if (selectedSeats.some(seat => seat.id === currentSeat.id)) {
+      setSelectedSeats(selectedSeats.filter(seat => seat.id !== currentSeat.id));
+    } else {
+      setSelectedSeats([...selectedSeats, currentSeat]);
+    }
   };
 
   // Handle Regular seat selection
-  const handleRegularSeatClick = (seat) => {
-    dispatch({ type: "TOGGLE_REGULAR_SEAT", payload: seat });
+  const handleRegularSeatClick = (currentSeat) => {
+    if (!currentSeat.is_available) return;
+
+    // Toggle seat selection
+    if (selectedSeats.some(seat => seat.id === currentSeat.id)) {
+      setSelectedSeats(selectedSeats.filter(seat => seat.id !== currentSeat.id));
+    } else {
+      setSelectedSeats([...selectedSeats, currentSeat]);
+    }
   };
+
+  // Total price calculation
+  const total = calculateTotal(selectedSeats);
 
   return (
     <div className="flex flex-col items-center">
       {/* VIP Section */}
-      <div className="mb-4 max-w-[375px]">
-        <p className="font-bold mb-2">VIP   | ${initialSeatsVIP[0].price}</p>
-        <div className="flex flex-wrap gap-2">
-          {state.VIPSeats.map((seat) => (
-            <span
-              key={seat.id}
-              className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
-                seat.selected ? "bg-red border-none" : ""
-              }`}
-              onClick={() => handleVIPSeatClick(seat)}
-            ></span>
-          ))}
+      {VIPSeats ? (
+        <div className="mb-4 max-w-[375px]">
+          <p className="font-bold mb-2">VIP | ${VIPSeats[0].price}</p>
+          <div className="flex flex-wrap gap-2">
+            {VIPSeatsArr.map((seat) => (
+              <span
+                key={seat.id}
+                className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
+                  !seat.is_available ? "bg-slate-500 cursor-not-allowed" : 
+                  selectedSeats.some(s => s.id === seat.id) ? "bg-red" : ""
+                }`}
+                onClick={() => handleVIPSeatClick(seat)}
+              ></span>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Regular Section */}
       <div className="max-w-[375px]">
-        <p className="font-bold mb-2">Regular | ${initialSeatsRegular[0].price}</p>
+        <p className="font-bold mb-2">Regular | ${regularSeats[0].price}</p>
         <div className="flex flex-wrap gap-2">
-          {state.RegularSeats.map((seat) => (
+          {regularSeatsArr.map((seat) => (
             <span
               key={seat.id}
               className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
-                seat.selected ? "bg-red border-none" : ""
+                !seat.is_available ? "bg-slate-500 cursor-not-allowed" :
+                selectedSeats.some(s => s.id === seat.id) ? "bg-red" : ""
               }`}
               onClick={() => handleRegularSeatClick(seat)}
             ></span>
@@ -117,12 +77,16 @@ const Seats = () => {
         </div>
       </div>
 
+      {/* Total and Pay Button */}
       <div className="mt-4 flex flex-col">
-        <h3 className="font-bold text-xl ">Total: ${state.cartTotal}</h3>
-        <button className="border-2 rounded-sm mt-2 w-32 h-10 hover:bg-red translate duration-300 ">Pay</button>
+        <h3 className="font-bold text-xl">Total: ${total}</h3>
+        <button
+          className="border-2 rounded-sm mt-2 w-32 h-10 hover:bg-red transition duration-300"
+          onClick={() => console.log("Selected Seats: ", selectedSeats)}
+        >
+          Pay
+        </button>
       </div>
-      {/* Display Cart Total */}
-
     </div>
   );
 };

@@ -18,9 +18,12 @@ Route::get('/', function () {
 
 // web.php
 Route::get('/events/{event}', function (Event $event) {
-    
+    $regularSeats = $event->seats()->where('type', 'Regular')->get();
+    $VIPSeats = $event->seats()->where('type', 'VIP')->get();
     return Inertia::render('Event/Show', [
-        'event' => $event
+        'event' => $event,
+        'regularSeats' => $regularSeats,
+        'VIPSeats' => $VIPSeats
     ]);
 })->name('events.show');
 

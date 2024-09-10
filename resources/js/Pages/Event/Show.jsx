@@ -4,9 +4,9 @@ import EventTitle from "@/Components/EventTitle";
 import Seats from "@/Components/Seats";
 
 
-const Show = ({event}) => {
+const Show = ({event, VIPSeats, regularSeats}) => {
 
-  console.log(event);
+  // console.log(regularSeats);
   return (
     <>
       <Nav />
@@ -23,7 +23,7 @@ const Show = ({event}) => {
 
         <EventTitle event={event}/>
         <div className="mt-2">
-          <Seats />
+          <Seats VIPSeats={VIPSeats}  regularSeats={regularSeats}/>
         </div>
       </section>
     </>
