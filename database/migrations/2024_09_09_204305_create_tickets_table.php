@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(Event::class);
             $table->string('seat_number');
-            $table->string('ticket_type');
+            $table->string('payment_id'); // Razorpay payment ID
+            $table->decimal('amount_paid'); // Store total amount
             $table->timestamps();
         });
     }

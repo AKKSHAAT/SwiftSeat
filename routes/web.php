@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SeatController;
 use App\Models\Event;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::get('/events/{event}', function (Event $event) {
 
 
 
+Route::post('seats/check-availability', [SeatController::class, 'checkAvailability'])->name('seats.checkAvailability');
 
 
 Route::get('tickets', function() {
