@@ -43,23 +43,32 @@ const Seats = ({ VIPSeats, regularSeats }) => {
 
 
   const handlePayment = ()=>{
+    localStorage.setItem('selectedSeats', selectedSeats);
+
     axios.post(route('seats.checkAvailability'), { selectedSeats })
     .then(response => {
       console.log('Success:', response.data);
-      // handle payment
+
+      try{
+          axios.post('/razorpay', { selectedSeats, total, user: auth.user },
+          {headers:{"Content-Type" : "application/json"}}
+          )
+            .then(response=>{
+              const { data, selectedSeats, total } = response.data;
+              console.log("data::", data);
+              console.log("selectedSeats::", data);
+              console.log("total::", data);
+            });
+
+      } catch (error) {
+        console.error("errr: of order :::::", error);
+      }
     })
     .catch(error => {
+      console.log('in catch');
+      console.log("err::::: ", error);
       setErr(error.response.data.error);
     });
-
-    // take selected and total
-    // take selectedSeats to backend to make sure they are still available✅
-
-    // If the payment is successful:
-              //Send a confirmation to the backend, marking the seats as is_available = false.
-              // Create a ticket for the user in the backend and store relevant
-    
-
   };
 
   // Total price calculation

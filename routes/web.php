@@ -54,9 +54,11 @@ Route::get('/dashboard', function () {
 
 Route::post('seats/check-availability', [SeatController::class, 'checkAvailability'])->name('seats.checkAvailability');
 
-Route::get('/razorpay', [PaymentController::class, 'processPayment'])->name('payment.razorpay');
 
-Route::post('payment-verify', [PaymentController::class, 'verify'])->name('payment.verify');
+
+// web.php (routes file)
+Route::post('/razorpay', [PaymentController::class, 'processPayment'])->middleware(['auth'])->name('payment.razorpay');
+Route::post('payment-verify', [PaymentController::class, 'verify'])->middleware(['auth'])->name('payment.verify');
 
 
 Route::middleware('auth')->group(function () {

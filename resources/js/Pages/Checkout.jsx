@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Checkout = ({ data }) => {
+const Checkout = ({ data={}, selectedSeats, total}) => {
   const [options, setOptions] = useState(data);
 
   //load Razorpay checkout script
@@ -52,13 +52,14 @@ const Checkout = ({ data }) => {
   return (
     <>
       <form name="razorpayform" action={route('payment.verify')} method="POST">
-        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" />
+          <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" />
         <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" />
         <input type="hidden" name="razorpay_signature" id="razorpay_signature" />
         <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')} />
       </form>
       
       <button className="bg-red" onClick={handleCheckout}>
+      
         Checkout
       </button>
     </>

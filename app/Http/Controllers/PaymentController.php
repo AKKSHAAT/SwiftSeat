@@ -10,50 +10,64 @@ use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
 use function Pest\Laravel\options;
 namespace App\Http\Controllers;
 
+use App\Models\Seat;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Razorpay\Api\Api;
 
 class PaymentController extends Controller
 {
-    public function processPayment()
-    {
+    public function processPayment( Request $request)
+    {   
+        $selectedSeats = $request->input('selectedSeats');
+        $total = $request->input('total'); 
+        $user = $request->user();
+
         $api_key = config('services.razorpay.razorpay_key');
         $api_secret = config('services.razorpay.razorpay_secret');
         $api = new Api($api_key, $api_secret);
-
+        
+        try {
         $order = $api->order->create([
-            'amount' => 100 * 100, // 100 INR in paise
+            'amount' => $total * 100,
             'currency' => 'INR',
-            'receipt' => 'order_receipt_id_123',
             'payment_capture' => 1 // Auto capture payment
         ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Failed to create Razorpay order'], 500);
+        }
+
 
         $data = [
             "key"  => $api_key, 
-            "amount" => $order['amount'],
+            "amount" => $order['amount'], // In paise
             "currency" => $order['currency'],
-            "name" => "Acme Corp",
-            "description" => "Test transaction",
-            "image" => "https://cdn.razorpay.com/logos/GhRQcyean79PqE_medium.png",
+            "name" => "$user->name",
+            "description" => "Ticket Purchase",
+            "image" => "",
             "prefill" => [
-                "name" => "Gaurav Kumar",
-                "email" => "gaurav.kumar@example.com",
-                "contact" => "9000090000",
+                "name" =>" $user->name",
+                "email" => "$user->email"
             ],
             "notes" => [
-                "address" => "Razorpay Corporate Office",
-                "merchant_order_id" => "12312321",
+                "address" => "n/a",
+                "merchant_order_id" => $order['id'],
             ],
             "theme" => [
                 "color"  => "#3399cc"
             ],
-            "order_id" => $order['id'],  
+            "order_id" => $order['id'], // Pass the order ID from Razorpay
         ];
 
-        return Inertia::render('Checkout', [
-            'data' => $data, // No need to json_encode here, Inertia will handle it
+        // dd($data);
+    // ----------everything is fine till here--------------
+
+        return response()->json([
+            'data' => $data, 
+            'selectedSeats' => $selectedSeats,
+            'total' => $total,
         ]);
+        
     }
 
 
