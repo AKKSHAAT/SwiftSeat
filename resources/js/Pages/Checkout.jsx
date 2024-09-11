@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-const Checkout = ({ data={}, selectedSeats, total}) => {
+const Checkout = ({ data, selectedSeats, total }) => {
   const [options, setOptions] = useState(data);
+
+  console.logoption
 
   //load Razorpay checkout script
   const loadScript = (src) => {

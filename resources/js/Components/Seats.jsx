@@ -55,9 +55,11 @@ const Seats = ({ VIPSeats, regularSeats }) => {
           )
             .then(response=>{
               const { data, selectedSeats, total } = response.data;
-              console.log("data::", data);
-              console.log("selectedSeats::", data);
-              console.log("total::", data);
+              Inertia.get(route('checkout.show'), {
+                data: data,
+                selectedSeats: selectedSeats,
+                total: total,
+              });
             });
 
       } catch (error) {

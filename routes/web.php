@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeatController;
@@ -54,7 +55,7 @@ Route::get('/dashboard', function () {
 
 Route::post('seats/check-availability', [SeatController::class, 'checkAvailability'])->name('seats.checkAvailability');
 
-
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
 
 // web.php (routes file)
 Route::post('/razorpay', [PaymentController::class, 'processPayment'])->middleware(['auth'])->name('payment.razorpay');
