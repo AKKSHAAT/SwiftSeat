@@ -23,7 +23,7 @@ const Show = ({event, VIPSeats, regularSeats}) => {
 
         <EventTitle event={event}/>
         <div className="mt-2">
-          <Seats VIPSeats={VIPSeats}  regularSeats={regularSeats}/>
+          <Seats VIPSeats={VIPSeats}  regularSeats={regularSeats} event_id={event.id}/>
         </div>
       </section>
     </>

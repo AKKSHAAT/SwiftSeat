@@ -4,7 +4,9 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\TicketController;
 use App\Models\Event;
+use App\Models\Ticket;
 use Faker\Provider\ar_EG\Payment;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Application;
@@ -40,12 +42,13 @@ Route::get('/events/{event}', function (Event $event) {
 
 Route::get('tickets', function() {
     $event = Event::find(1);
-
-    
     return inertia('Ticket/Index', [
         'event' => $event,
     ]);
 })->name('tickets.index');
+
+
+Route::post('tickets', [TicketController::class, 'store'])->name('ticket.store');
 
 
 Route::get('/dashboard', function () {
@@ -60,6 +63,8 @@ Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('chec
 // web.php (routes file)
 Route::post('/razorpay', [PaymentController::class, 'processPayment'])->middleware(['auth'])->name('payment.razorpay');
 Route::post('payment-verify', [PaymentController::class, 'verify'])->middleware(['auth'])->name('payment.verify');
+
+
 
 
 Route::middleware('auth')->group(function () {
