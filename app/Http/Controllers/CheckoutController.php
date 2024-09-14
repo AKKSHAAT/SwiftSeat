@@ -12,10 +12,12 @@ class CheckoutController extends Controller
         $data = $request->input('data');
         $selectedSeats = $request->input('selectedSeats');
         $total = $request->input('total');
+        $event = $request->input('event_id');
 
         // Render the Checkout page with the passed data
         return Inertia::render('Checkout', [
             'data' => $data,
+            'eventId' => $event,
             'selectedSeats' => $selectedSeats,
             'total' => $total,
         ]);

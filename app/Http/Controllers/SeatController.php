@@ -10,7 +10,7 @@ class SeatController extends Controller
     public function checkAvailability(Request $request) {
         
         $selectedSeats = $request->input('selectedSeats');
-
+        
         if (empty($selectedSeats)) {
             return response()->json(['error' => 'No seats selected'], 400);
         }

@@ -1,6 +1,6 @@
-import { usePage, useForm } from '@inertiajs/react'; // Correct import
-import React, { useState } from 'react';
-import axios from 'axios';
+import { usePage, useForm } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import axios from '@/lib/axios';
 import { Inertia } from '@inertiajs/inertia';
 
 const calculateTotal = (selectedSeats) => {
@@ -14,94 +14,130 @@ const Seats = ({ VIPSeats, regularSeats, event_id }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [err, setErr] = useState(null);
 
+  // Calculate total
+  const total = calculateTotal(selectedSeats);
+
   // Using useForm to manage form state
   const { data, setData, post } = useForm({
     selectedSeats: [],
     total: 0,
-    user: auth.user
+    user: auth.user,
   });
 
-  const handleVIPSeatClick = (currentSeat) => {
+  // Update selected seats when user selects a seat
+  const handleSeatClick = (currentSeat) => {
     if (!currentSeat.is_available) return;
-    setSelectedSeats((prev) => prev.some(seat => seat.id === currentSeat.id)
-      ? prev.filter(seat => seat.id !== currentSeat.id)
-      : [...prev, currentSeat]);
+    setSelectedSeats((prev) =>
+      prev.some((seat) => seat.id === currentSeat.id)
+        ? prev.filter((seat) => seat.id !== currentSeat.id)
+        : [...prev, currentSeat]
+    );
   };
 
-  const handleRegularSeatClick = (currentSeat) => {
-    if (!currentSeat.is_available) return;
-    setSelectedSeats((prev) => prev.some(seat => seat.id === currentSeat.id)
-      ? prev.filter(seat => seat.id !== currentSeat.id)
-      : [...prev, currentSeat]);
-  };
+  // Update the form data when seats are selected
+  useEffect(() => {
+    setData({
+      selectedSeats,
+      total: calculateTotal(selectedSeats),
+    });
+  }, [selectedSeats]);
 
+  // Handle payment initiation
   const handlePayment = () => {
-    setData('selectedSeats', selectedSeats);
-    setData('total', calculateTotal(selectedSeats));
+    // Ensure the form data is correctly updated
+    setData({
+      selectedSeats,
+      total,
+    });
 
-    axios.post(route('seats.checkAvailability'), { selectedSeats })
-      .then(response => {
-        console.log('Success:', response.data);
-        console.log('sending to razorpay');
-        data.selectedSeats = selectedSeats,
-        data.total = total,
-        post('/razorpay', {
-          onSuccess: () => {
-            console.log('recived from razorpay');
-            // const { data, selectedSeats, total } = response.data;
-            // Inertia.get(route('checkout.show'), {
-            //   data: data,
-            //   selectedSeats: selectedSeats,
-            //   total: total,
-            //   eventId: event_id
-            // });
-          }
-        });
+    axios
+      .post('seats/check-availability', { selectedSeats })
+      .then((response) => {
+        console.log('Seat REsponse:::::::', response.data);
+
+        axios.post('razorpay', {
+          selectedSeats : selectedSeats,
+          total : total,
+        })
+          .then((res)=>{
+            console.log('Order created and Razorpay payment initialized')
+            console.log(res.data);
+            Inertia.get('/checkout', {
+              event_id,
+              data : res.data.data,
+              selectedSeats : res.data.selectedSeats,
+              total : res.data.total
+            });
+          })
+          .catch(err=>console.log('errrr:::::::', err.response.data));
+        // Make the final post request to Razorpay
+        // post(route('payment.razorpay'), {
+        //   selectedSeats,
+        //   total,
+        //   event_id,
+        //   onSuccess: () => {
+        //     console.log('Order created and Razorpay payment initialized');
+        //   },
+        // });
       })
-      .catch(error => {
-        console.error("Error:", error);
-        setErr(error.response.data.error);
+      .catch((error) => {
+        console.error('Error:', error.data);
+        setErr(error.response?.data?.error || 'Something went wrong.');
       });
   };
-
-  // Total price calculation
-  const total = calculateTotal(selectedSeats);
 
   return (
     <div className="flex flex-col items-center">
       {err && <p className="text-red">{err}</p>}
 
-      {VIPSeats ? (
+      {VIPSeats && (
         <div className="mb-4 max-w-[375px]">
-          <p className="font-bold mb-2">VIP | ${VIPSeats[0].price}</p>
+          <p className="font-bold mb-2">VIP | ₹{VIPSeats[0].price}</p>
           <div className="flex flex-wrap gap-2">
             {VIPSeatsArr.map((seat) => (
               <span
                 key={seat.id}
-                className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${!seat.is_available ? "bg-slate-500 cursor-not-allowed" : selectedSeats.some(s => s.id === seat.id) ? "bg-red" : ""}`}
-                onClick={() => handleVIPSeatClick(seat)}
+                className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
+                  !seat.is_available
+                    ? 'bg-slate-500 cursor-not-allowed'
+                    : selectedSeats.some((s) => s.id === seat.id)
+                    ? 'bg-red'
+                    : ''
+                }`}
+                onClick={() => handleSeatClick(seat)}
               ></span>
             ))}
           </div>
         </div>
-      ) : null}
+      )}
 
-      <div className="max-w-[375px]">
-        <p className="font-bold mb-2">Regular | ${regularSeats[0].price}</p>
-        <div className="flex flex-wrap gap-2">
-          {regularSeatsArr.map((seat) => (
-            <span
-              key={seat.id}
-              className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${!seat.is_available ? "bg-slate-500 cursor-not-allowed" : selectedSeats.some(s => s.id === seat.id) ? "bg-red" : ""}`}
-              onClick={() => handleRegularSeatClick(seat)}
-            ></span>
-          ))}
+      {regularSeats && (
+        <div className="max-w-[375px]">
+          <p className="font-bold mb-2">Regular | ₹{regularSeats[0].price}</p>
+          <div className="flex flex-wrap gap-2">
+            {regularSeatsArr.map((seat) => (
+              <span
+                key={seat.id}
+                className={`w-6 h-6 border-2 rounded-md cursor-pointer transition-colors ${
+                  !seat.is_available
+                    ? 'bg-slate-500 cursor-not-allowed'
+                    : selectedSeats.some((s) => s.id === seat.id)
+                    ? 'bg-red'
+                    : ''
+                }`}
+                onClick={() => handleSeatClick(seat)}
+              ></span>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="mt-4 flex flex-col">
-        <h3 className="font-bold text-xl">Total: ${total}</h3>
-        <button className="border-2 rounded-sm mt-2 w-32 h-10 hover:bg-red transition duration-300" onClick={handlePayment}>
+        <h3 className="font-bold text-xl">Total: ₹{total}</h3>
+        <button
+          className="border-2 rounded-sm mt-2 w-32 h-10 hover:bg-red transition duration-300"
+          onClick={handlePayment}
+        >
           Pay
         </button>
       </div>
