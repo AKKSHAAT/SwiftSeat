@@ -75,11 +75,12 @@ const Checkout = ({ data, selectedSeats, total, eventId }) => {
                     axios.post('/tickets', ticketData)
                         .then((res) => {
                             setMsg('Booking confirmed! ✅');
-                            console.log(res.data);
+                            console.log("ticket Data:::  ",  res.data);
+                            Inertia.get(route('tickets.index'));
                         })
                         .catch(err=>{
                             setMsg('Booking failed ⛔');
-                            console.log(err.data);
+                            console.log(err);
                         })
                     
                     setMsg('Payment verification failed ⛔');

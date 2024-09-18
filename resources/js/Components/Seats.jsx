@@ -54,12 +54,10 @@ const Seats = ({ VIPSeats, regularSeats, event_id }) => {
       .post('seats/check-availability', { selectedSeats })
       .then((response) => {
         console.log('Seat REsponse:::::::', response.data);
-
         axios.post('razorpay', {
           selectedSeats : selectedSeats,
           total : total,
-        })
-          .then((res)=>{
+        }) .then((res)=>{
             console.log('Order created and Razorpay payment initialized')
             console.log(res.data);
             Inertia.get('/checkout', {
@@ -68,20 +66,10 @@ const Seats = ({ VIPSeats, regularSeats, event_id }) => {
               selectedSeats : res.data.selectedSeats,
               total : res.data.total
             });
-          })
-          .catch(err=>console.log('errrr:::::::', err.response.data));
-        // Make the final post request to Razorpay
-        // post(route('payment.razorpay'), {
-        //   selectedSeats,
-        //   total,
-        //   event_id,
-        //   onSuccess: () => {
-        //     console.log('Order created and Razorpay payment initialized');
-        //   },
-        // });
+          }) .catch(err=>console.log('errrr:::::::', err.response.data));
       })
       .catch((error) => {
-        console.error('Error:', error.data);
+        console.error('Error:', error);
         setErr(error.response?.data?.error || 'Something went wrong.');
       });
   };

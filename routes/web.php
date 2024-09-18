@@ -35,15 +35,7 @@ Route::get('/events/{event}', function (Event $event) {
 
 
 
-Route::get('tickets', function() {
-    dd('lmaoo you are here');
-    $event = Event::find(1);
-    return inertia('Ticket/Index', [
-        'event' => $event,
-    ]);
-})->name('tickets.index');
-
-
+Route::get('tickets', [TicketController::class, 'index'])->middleware(['auth'])->name('tickets.index');
 Route::post('tickets', [TicketController::class, 'store'])->middleware(['auth'])->name('tickets.store');
 
 
@@ -53,6 +45,7 @@ Route::get('/dashboard', function () {
 
 
 Route::post('seats/check-availability', [SeatController::class, 'checkAvailability'])->name('seats.checkAvailability');
+Route::post('seats/update', [SeatController::class, 'update'])->name('seats.update');
 
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
 

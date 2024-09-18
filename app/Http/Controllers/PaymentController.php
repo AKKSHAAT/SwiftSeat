@@ -50,6 +50,8 @@ class PaymentController extends Controller
                 'payment_capture' => 1, // Auto capture payment
                 'receipt' => 'order_receipt_12345' // Unique receipt
             ]);
+            
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'err',
@@ -106,10 +108,13 @@ class PaymentController extends Controller
 
             try{
                 $paymentData = $this->savePayment($request->razorpay_payment_id, 1.00);
+
                 return response()->json([
                     'status' =>'success',
                     'payment' => $paymentData,
                 ]);
+
+
                 // redirect()->route('tickets.store')->with([
                 //     'payment' => $paymentData,
                 //     'total' => 1.00,

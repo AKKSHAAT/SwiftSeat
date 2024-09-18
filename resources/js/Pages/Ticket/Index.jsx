@@ -1,15 +1,22 @@
-import Nav from '@/Components/Nav'
-import Ticket from '@/Components/Ticket'
-import React from 'react'
+import Nav from "@/Components/Nav";
+import Ticket from "@/Components/Ticket";
+import React from "react";
 
-const Index = ({event}) => {
+const Index = ({ ticketList }) => {
   return (
     <>
-    <Nav />
-        <Ticket event={event}/>
-        <Ticket />
+      <Nav />
+      {ticketList &&
+        ticketList.map((ticket, index) => {
+          return (
+            <>
+              <Ticket key={index} ticket={ticket} />
+              <hr className="border-t-white/10 pt-5 " />
+            </>
+          );
+        })}
     </>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

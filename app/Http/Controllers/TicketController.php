@@ -4,11 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use Exception;
-use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TicketController extends Controller
 {
+    // TODO:: mark seats taken
+    public function index() {
+        $user = Auth::user();
+        $ticketList = $user->tickets()->with('event', 'user')->orderBy('created_at', 'desc')->get();
+
+        return Inertia::render('Ticket/Index', [
+            'ticketList' => $ticketList
+        ]);
+    }
+
     public function store(Request $request) {
         // TODO::make ticket 
         $paymentId = $request->paymentId;
@@ -35,7 +46,5 @@ class TicketController extends Controller
                 'msg' => $e->getMessage()
             ]);
          }
-
-
     }
 }
