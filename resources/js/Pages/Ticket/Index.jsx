@@ -9,10 +9,10 @@ const Index = ({ ticketList }) => {
       {ticketList &&
         ticketList.map((ticket, index) => {
           return (
-            <>
+            <div key={index}>
               <Ticket key={index} ticket={ticket} />
               <hr className="border-t-white/10 pt-5 " />
-            </>
+            </div>
           );
         })}
     </>
